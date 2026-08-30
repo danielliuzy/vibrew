@@ -1,0 +1,15 @@
+# devkitARM build output (console/)
+build/
+*.3dsx
+*.elf
+*.smdh
+*.map
+
+# proxy build output
+proxy/proxy
+
+# secrets
+.env
+
+# macOS
+.DS_Store

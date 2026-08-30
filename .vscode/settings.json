@@ -1,0 +1,7 @@
+{
+    // devkitARM/libctru IntelliSense is configured in c_cpp_properties.json,
+    // which only the MS C/C++ extension reads -- so turn its engine back on
+    // for this workspace and keep clangd out of the way.
+    "C_Cpp.intelliSenseEngine": "default",
+    "clangd.enable": false
+}

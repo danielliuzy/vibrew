@@ -30,7 +30,31 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  std::cout << "Done\n";
+  int conn = accept(fd, nullptr, nullptr);
+
+  if (conn == -1) {
+    perror("accept");
+    close(fd);
+    return EXIT_FAILURE;
+  }
+
+  while (true) {
+    char buf[1024];
+    ssize_t n = read(conn, buf, sizeof(buf));
+    if (n == -1) {
+      perror("read");
+      close(conn);
+      close(fd);
+      return EXIT_FAILURE;
+    } else if (n > 0) {
+      std::cout.write(buf, n);
+    } else {
+      break;
+    }
+  }
+
+  std::cout << "closing\n";
+  close(conn);
   close(fd);
 
   return 0;

@@ -1,0 +1,13 @@
+{
+    "folders": [
+        { "name": "console", "path": "console" },
+        { "name": "proxy", "path": "proxy" }
+    ],
+    "settings": {
+        // IntelliSense is configured per folder in each folder's
+        // .vscode/c_cpp_properties.json, which only the MS C/C++ extension
+        // reads -- so keep its engine on and clangd out of the way.
+        "C_Cpp.intelliSenseEngine": "default",
+        "clangd.enable": false
+    }
+}

@@ -7,6 +7,17 @@ CXXFLAGS := -std=c++20 -Wall -Wextra -g -O0 -MMD -MP
 LDFLAGS  :=
 LDLIBS   :=
 
+# cpp-httplib needs this define to compile its TLS support, plus OpenSSL.
+BREW     := /opt/homebrew/opt
+CXXFLAGS += -DCPPHTTPLIB_OPENSSL_SUPPORT
+CXXFLAGS += -I$(BREW)/cpp-httplib/include
+CXXFLAGS += -I$(BREW)/nlohmann-json/include
+CXXFLAGS += -I$(BREW)/openssl@3/include
+LDFLAGS  += -L$(BREW)/openssl@3/lib
+LDLIBS   += -lssl -lcrypto
+# macOS: cpp-httplib reads the system trust store via Apple's Security framework.
+LDLIBS   += -framework CoreFoundation -framework Security
+
 # Uncomment for address/UB sanitizers (Mac-native debugging).
 # CXXFLAGS += -fsanitize=address,undefined
 # LDFLAGS  += -fsanitize=address,undefined

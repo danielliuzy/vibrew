@@ -5,11 +5,20 @@
 
 #include <iostream>
 
+#include "llm.h"
+
 int main() {
   int fd = socket(AF_INET, SOCK_STREAM, 0);
 
   if (fd == -1) {
     perror("socket");
+    return EXIT_FAILURE;
+  }
+
+  int yes{1};
+  if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
+    perror("setsockopt");
+    close(fd);
     return EXIT_FAILURE;
   }
 

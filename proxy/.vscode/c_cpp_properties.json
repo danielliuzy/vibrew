@@ -10,9 +10,14 @@
             "cppStandard": "c++20",
             "intelliSenseMode": "macos-clang-arm64",
             "includePath": [
-                "${workspaceFolder}/src/**"
+                "${workspaceFolder}/src/**",
+                "/opt/homebrew/opt/cpp-httplib/include",
+                "/opt/homebrew/opt/nlohmann-json/include",
+                "/opt/homebrew/opt/openssl@3/include"
             ],
-            "defines": []
+            "defines": [
+                "CPPHTTPLIB_OPENSSL_SUPPORT"
+            ]
         }
     ],
     "version": 4

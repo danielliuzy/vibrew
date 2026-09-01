@@ -7,8 +7,16 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+namespace {
+constexpr const char* kApiKeyEnv = "OPENROUTER_API_KEY";
+constexpr const char* kHost = "openrouter.ai";
+constexpr const char* kCompletionsPath = "/api/v1/chat/completions";
+constexpr const char* kModel = "anthropic/claude-haiku-4.5";
+constexpr const char* kContentPath = "/choices/0/message/content";
+}  // namespace
+
 LlmResult ask(const std::string& prompt) {
-  const char* key = std::getenv("OPENROUTER_API_KEY");
+  const char* key = std::getenv(kApiKeyEnv);
   if (!key) {
     std::cerr << "no key in env\n";
     return {false, "", "Invalid api key"};
@@ -22,12 +30,12 @@ LlmResult ask(const std::string& prompt) {
   body["model"] = "anthropic/claude-haiku-4.5";
   body["messages"] = nlohmann::json::array({msg});
 
-  httplib::SSLClient cli("openrouter.ai");
+  httplib::SSLClient cli(kHost);
 
   httplib::Headers headers{{"Authorization", std::string("Bearer ") + key}};
 
-  const auto res = cli.Post("/api/v1/chat/completions", headers, body.dump(),
-                            "application/json");
+  const auto res =
+      cli.Post(kCompletionsPath, headers, body.dump(), "application/json");
 
   if (!res) {
     std::cerr << "request failed\n";
@@ -51,8 +59,8 @@ LlmResult ask(const std::string& prompt) {
   }
 
   try {
-    const auto answer =
-        parsed.at("/choices/0/message/content"_json_pointer).get<std::string>();
+    const auto answer = parsed.at(nlohmann::json::json_pointer(kContentPath))
+                            .get<std::string>();
     std::cerr << answer << '\n';
     return {true, answer, ""};
   } catch (const nlohmann::json::exception& e) {

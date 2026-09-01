@@ -27,7 +27,7 @@ LlmResult ask(const std::string& prompt) {
   msg["content"] = prompt;
 
   nlohmann::json body;
-  body["model"] = "anthropic/claude-haiku-4.5";
+  body["model"] = kModel;
   body["messages"] = nlohmann::json::array({msg});
 
   httplib::SSLClient cli(kHost);

@@ -33,10 +33,23 @@ LlmResult ask(const std::string &prompt) {
   }
 
   if (res->status != 200) {
-    return {false, "", "status not 200"};
+    return {
+        false,
+        "",
+        "HTTP " + std::to_string(res->status),
+    };
   }
 
-  std::cout << res->body << "\n";
+  const auto parsed = nlohmann::json::parse(res->body, nullptr, false);
 
-  return {true, prompt, ""};
+  if (parsed.is_discarded()) {
+    return {false, "", "invalid json"};
+  }
+
+  try {
+    const auto answer =
+        parsed.at("/choices/0/message/content"_json_pointer).get<std::string>();
+    std::cerr << answer << '\n';
+    return {true, answer, ""};
+  } catch (const nlohmann::json::exception &e) { return {false, "", e.what()}; }
 }

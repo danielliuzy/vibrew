@@ -7,9 +7,10 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
-LlmResult ask(const std::string &prompt) {
-  const char *key = std::getenv("OPENAI_API_KEY");
+LlmResult ask(const std::string& prompt) {
+  const char* key = std::getenv("OPENROUTER_API_KEY");
   if (!key) {
+    std::cerr << "no key in env\n";
     return {false, "", "Invalid api key"};
   }
 
@@ -18,21 +19,23 @@ LlmResult ask(const std::string &prompt) {
   msg["content"] = prompt;
 
   nlohmann::json body;
-  body["model"] = "gpt-5.6-sol";
+  body["model"] = "anthropic/claude-haiku-4.5";
   body["messages"] = nlohmann::json::array({msg});
 
-  httplib::SSLClient cli("api.openai.com");
+  httplib::SSLClient cli("openrouter.ai");
 
   httplib::Headers headers{{"Authorization", std::string("Bearer ") + key}};
 
-  const auto res = cli.Post("/v1/chat/completions", headers, body.dump(),
+  const auto res = cli.Post("/api/v1/chat/completions", headers, body.dump(),
                             "application/json");
 
   if (!res) {
+    std::cerr << "request failed\n";
     return {false, "", httplib::to_string(res.error())};
   }
 
   if (res->status != 200) {
+    std::cerr << "status is " << res->status << '\n';
     return {
         false,
         "",
@@ -43,6 +46,7 @@ LlmResult ask(const std::string &prompt) {
   const auto parsed = nlohmann::json::parse(res->body, nullptr, false);
 
   if (parsed.is_discarded()) {
+    std::cerr << "invalid json\n";
     return {false, "", "invalid json"};
   }
 
@@ -51,5 +55,7 @@ LlmResult ask(const std::string &prompt) {
         parsed.at("/choices/0/message/content"_json_pointer).get<std::string>();
     std::cerr << answer << '\n';
     return {true, answer, ""};
-  } catch (const nlohmann::json::exception &e) { return {false, "", e.what()}; }
+  } catch (const nlohmann::json::exception& e) {
+    return {false, "", e.what()};
+  }
 }

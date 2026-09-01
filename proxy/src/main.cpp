@@ -27,7 +27,7 @@ int main() {
   addr.sin_port = htons(1234);
   addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-  if (bind(fd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == -1) {
+  if (bind(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) == -1) {
     perror("bind");
     close(fd);
     return EXIT_FAILURE;
@@ -58,7 +58,6 @@ int main() {
     } else if (n > 0) {
       std::string req(buf, n);
       ask(req);
-      // std::cout.write(buf, n);
     } else {
       break;
     }

@@ -1,6 +1,10 @@
 {
     "configurations": [
         {
+            // common/ is compiled by BOTH builds. IntelliSense here uses the
+            // Mac/clang config because it is the faster tier to iterate in;
+            // anything that only compiles under one of the two toolchains
+            // does not belong in this directory.
             "name": "Mac",
             "compilerPath": "/usr/bin/clang++",
             "compilerArgs": [
@@ -10,14 +14,7 @@
             "cppStandard": "c++20",
             "intelliSenseMode": "macos-clang-arm64",
             "includePath": [
-                "${workspaceFolder}/src/**",
-                "${workspaceFolder}/../common/**",
-                "/opt/homebrew/opt/cpp-httplib/include",
-                "/opt/homebrew/opt/nlohmann-json/include",
-                "/opt/homebrew/opt/openssl@3/include"
-            ],
-            "defines": [
-                "CPPHTTPLIB_OPENSSL_SUPPORT"
+                "${workspaceFolder}/**"
             ]
         }
     ],

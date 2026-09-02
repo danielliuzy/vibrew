@@ -10,10 +10,11 @@
                 "-mtp=soft"
             ],
             "cStandard": "gnu11",
-            "cppStandard": "gnu++11",
+            "cppStandard": "gnu++20",
             "intelliSenseMode": "gcc-arm",
             "includePath": [
                 "${workspaceFolder}/source/**",
+                "${workspaceFolder}/../common/**",
                 "/opt/devkitpro/libctru/include"
             ],
             "defines": [

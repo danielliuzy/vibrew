@@ -1,7 +1,8 @@
 {
     "folders": [
         { "name": "console", "path": "console" },
-        { "name": "proxy", "path": "proxy" }
+        { "name": "proxy", "path": "proxy" },
+        { "name": "common", "path": "common" }
     ],
     "settings": {
         // IntelliSense is configured per folder in each folder's

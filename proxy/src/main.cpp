@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "llm.h"
+#include "protocol.h"
 
 int main() {
   int fd = socket(AF_INET, SOCK_STREAM, 0);

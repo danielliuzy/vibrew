@@ -48,18 +48,23 @@ int main() {
     return EXIT_FAILURE;
   }
 
+  proto::Frame frame;
+
   while (true) {
-    char buf[1024];
-    ssize_t n = read(conn, buf, sizeof(buf));
-    if (n == -1) {
-      perror("read");
-      close(conn);
-      close(fd);
-      return EXIT_FAILURE;
-    } else if (n > 0) {
-      std::string req(buf, n);
-      ask(req);
-    } else {
+    const auto read_result = proto::read_frame(conn, frame);
+    if (read_result == proto::ReadResult::Eof) {
+      break;
+    }
+    if (read_result != proto::ReadResult::Ok) {
+      std::cerr << "read_frame error " << static_cast<int>(read_result) << '\n';
+      break;
+    }
+    const auto write_result = proto::write_frame(
+        conn, frame.type, reinterpret_cast<const char*>(frame.payload.data()),
+        frame.payload.size());
+    if (write_result != proto::WriteResult::Ok) {
+      std::cerr << "write_frame error " << static_cast<int>(write_result)
+                << '\n';
       break;
     }
   }
